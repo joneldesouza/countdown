@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Count Down</title>
+</head>
+<body>
+
+  <div class="counter-wrapper">
+    <div class="timer" data-label="Esgota em" data-end-date="30 Dec 2016 23:59:59"></div>
+    <div class="timer" data-label="Esgota em" data-end-date="1 Jan 2017 23:59:59"></div>
+  </div>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script>
+  (function() {
+
+    function countdownElement(el) {
+
+      $.each($(el), function(item) {
+
+        var $this = $(this);
+        var end = new Date($(this).data('end-date'));
+        var start = new Date($(this).data('start-date'));
+
+        var _second = 1000;
+        var _minute = _second * 60;
+        var _hour = _minute * 60;
+        var _dayHour = 24 * 7;
+        var _day = 24*60*60*1000;
+
+        var timer;
+
+        function showRemaining() {
+
+          var now = new Date();
+          var distance = end - now;
+          var days = Math.floor(distance / _day);
+          var hours = Math.floor((distance % _day) / _hour);
+          var minutes = Math.floor((distance % _hour) / _minute);
+          var seconds = Math.floor((distance % _minute) / _second);
+          var milliseconds = distance % _second;
+          var countdownElement = document.getElementById('timer');
+
+          if (distance < 0) {
+            clearInterval(timer);
+            $this.html('Acabou.');
+            return;
+          }
+          var hasLabel = $this.find('.counter-label');
+
+          if (hasLabel.length < 1) {
+            console.log(hasLabel.length);
+            $this.html(
+              '<div class="counter-label">' +
+                '<span class="' + $this.attr('id') + '-label general-label">' + $this.data('label') + '</span>' +
+              '</div>' +
+              '<div class="measure-numbers">' +
+                '<span class="number day">' + days + '</span>' +
+                '<span class="number hour">' + hours + '</span>' +
+                '<span class="number minute">' + minutes + '</span>' +
+                '<span class="number second">' + seconds + '</span>' +
+                '<span class="number milisecond">' + milliseconds + '</span>' +
+              '</div>'
+            );
+          } else {
+            $this.find('.number.day').html(days);
+            $this.find('.number.hour').html(hours);
+            $this.find('.number.minute').html(minutes);
+            $this.find('.number.second').html(seconds);
+            $this.find('.number.milisecond').html(milliseconds);
+          }
+
+        }
+        timer = setInterval(showRemaining, 200);
+      });
+    }
+
+    $(document).ready(function() {
+      countdownElement('.timer');
+    });
+
+  }(jQuery));
+  </script>
+
+</body>
+</html>
